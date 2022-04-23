@@ -181,9 +181,11 @@ class Meter:
 
         def _hex_twos_complement_to_decimal(self, hex_value: str) -> int:
             """Perform signed 2's complement conversion."""
-            if len(hex_value) == 8:
-                return int(struct.unpack(">i", bytes.fromhex(hex_value))[0])
-            return int(hex_value, 16)
+            value = int(hex_value, 16)
+            bits = len(hex_value) * 4
+            if value & (1 << (bits-1)):
+                value -= 1 << bits
+            return value
 
     class AlternativeHistoricalConsumption:
         """Information about the meter's altenative historical readings."""
